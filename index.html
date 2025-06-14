@@ -237,22 +237,24 @@
             gap: 10px;
         }
         .criteria-item {
-            padding: 8px;
-            border-radius: 5px;
             background-color: rgba(139, 69, 19, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
         }
         .criteria-label {
-            font-weight: bold;
-        }
-        .criteria-points {
             color: #8B4513;
             font-weight: bold;
-            padding: 4px 8px;
-            background-color: rgba(255, 215, 0, 0.2);
-            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        .criteria-points {
+            color: #FFD700;
+            font-weight: bold;
+        }
+        .criteria-multiplier {
+            color: #90EE90;
+            font-size: 0.9em;
+            margin-top: 3px;
         }
         .score-display {
             font-size: 1.5em;
@@ -332,6 +334,82 @@
             0% { transform: scale(1); }
             50% { transform: scale(1.2); }
             100% { transform: scale(1); }
+        }
+        .skins-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .skins-title {
+            color: #8B4513;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+        .skins-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .skin-card {
+            background-color: rgba(139, 69, 19, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        .skin-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .skin-card.active {
+            border: 2px solid #FFD700;
+            background-color: rgba(255, 215, 0, 0.1);
+        }
+        .skin-card.locked {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .skin-card.locked:hover {
+            transform: none;
+        }
+        .skin-name {
+            color: #8B4513;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .skin-multiplier {
+            color: #FFD700;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .skin-price {
+            color: #8B4513;
+            font-size: 0.9em;
+        }
+        .skin-status {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 0.8em;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+        .skin-status.owned {
+            background-color: #90EE90;
+            color: #006400;
+        }
+        .skin-status.locked {
+            background-color: #ff4444;
+            color: white;
+        }
+        .skin-status.active {
+            background-color: #FFD700;
+            color: #8B4513;
         }
 
         /* Мобильные стили */
@@ -649,6 +727,12 @@
                     Открыто сундуков: <span id="totalChests">0</span>
                 </div>
                 <button class="reset-btn" onclick="resetStats()">Обнулить</button>
+                <div class="skins-container">
+                    <div class="skins-title">Скины с множителями</div>
+                    <div class="skins-grid" id="skinsGrid">
+                        <!-- Скины будут добавлены через JavaScript -->
+                    </div>
+                </div>
                 <div class="stats-container">
                     <div class="stats-title">Статистика</div>
                     <div class="stats-grid">
@@ -674,20 +758,24 @@
                     <div class="criteria-title">Критерии очков</div>
                     <div class="criteria-grid">
                         <div class="criteria-item">
-                            <span class="criteria-label">Обычные слова</span>
-                            <span class="criteria-points">1 очко</span>
+                            <div class="criteria-label">Обычные слова</div>
+                            <div class="criteria-points">1 очко</div>
+                            <div class="criteria-multiplier" id="commonMultiplier">x1</div>
                         </div>
                         <div class="criteria-item">
-                            <span class="criteria-label">Редкие слова</span>
-                            <span class="criteria-points">3 очка</span>
+                            <div class="criteria-label">Редкие слова</div>
+                            <div class="criteria-points">3 очка</div>
+                            <div class="criteria-multiplier" id="rareMultiplier">x1</div>
                         </div>
                         <div class="criteria-item">
-                            <span class="criteria-label">Эпические слова</span>
-                            <span class="criteria-points">5 очков</span>
+                            <div class="criteria-label">Эпические слова</div>
+                            <div class="criteria-points">5 очков</div>
+                            <div class="criteria-multiplier" id="epicMultiplier">x1</div>
                         </div>
                         <div class="criteria-item">
-                            <span class="criteria-label">Легендарные слова</span>
-                            <span class="criteria-points">10 очков</span>
+                            <div class="criteria-label">Легендарные слова</div>
+                            <div class="criteria-points">10 очков</div>
+                            <div class="criteria-multiplier" id="legendaryMultiplier">x1</div>
                         </div>
                     </div>
                 </div>
@@ -719,92 +807,123 @@
         const bigEpicWords = ['Древний дракон', 'Космический феникс', 'Звёздный единорог', 'Небесный пегас', 'Космический кентавр', 'Галактический грифон', 'Временной василиск', 'Квантовая химера', 'Космический кракен', 'Древний левиафан'];
         const bigLegendaryWords = ['Создатель миров', 'Хранитель времени', 'Повелитель пространства', 'Властелин галактик', 'Хранитель знаний', 'Страж вечности', 'Повелитель стихий', 'Хранитель судеб', 'Властелин магии', 'Создатель легенд'];
 
+        const skins = [
+            { id: 'basic', name: 'Базовый', multiplier: 1, price: 0, owned: true, active: true },
+            { id: 'golden', name: 'Золотой', multiplier: 1.5, price: 500, owned: false, active: false },
+            { id: 'diamond', name: 'Алмазный', multiplier: 2, price: 1000, owned: false, active: false },
+            { id: 'rainbow', name: 'Радужный', multiplier: 2.5, price: 2000, owned: false, active: false },
+            { id: 'cosmic', name: 'Космический', multiplier: 3, price: 5000, owned: false, active: false }
+        ];
+
+        let currentMultiplier = 1;
+
+        function loadSkins() {
+            const savedSkins = localStorage.getItem('skins');
+            if (savedSkins) {
+                const parsedSkins = JSON.parse(savedSkins);
+                skins.forEach(skin => {
+                    const savedSkin = parsedSkins.find(s => s.id === skin.id);
+                    if (savedSkin) {
+                        skin.owned = savedSkin.owned;
+                        skin.active = savedSkin.active;
+                        if (skin.active) {
+                            currentMultiplier = skin.multiplier;
+                        }
+                    }
+                });
+            }
+            updateSkinsDisplay();
+        }
+
+        function saveSkins() {
+            localStorage.setItem('skins', JSON.stringify(skins));
+        }
+
+        function updateSkinsDisplay() {
+            const skinsGrid = document.getElementById('skinsGrid');
+            skinsGrid.innerHTML = '';
+
+            skins.forEach(skin => {
+                const skinCard = document.createElement('div');
+                skinCard.className = `skin-card ${skin.owned ? '' : 'locked'} ${skin.active ? 'active' : ''}`;
+                skinCard.innerHTML = `
+                    <div class="skin-name">${skin.name}</div>
+                    <div class="skin-multiplier">x${skin.multiplier}</div>
+                    <div class="skin-price">${skin.price} 💰</div>
+                    <div class="skin-status ${skin.active ? 'active' : skin.owned ? 'owned' : 'locked'}">
+                        ${skin.active ? 'Активен' : skin.owned ? 'Куплен' : 'Заблокирован'}
+                    </div>
+                `;
+
+                if (skin.owned) {
+                    skinCard.onclick = () => activateSkin(skin.id);
+                } else {
+                    skinCard.onclick = () => buySkin(skin.id);
+                }
+
+                skinsGrid.appendChild(skinCard);
+            });
+        }
+
+        function buySkin(skinId) {
+            const skin = skins.find(s => s.id === skinId);
+            if (!skin || skin.owned || money < skin.price) return;
+
+            if (confirm(`Купить скин "${skin.name}" за ${skin.price} 💰?`)) {
+                money -= skin.price;
+                skin.owned = true;
+                updateMoneyDisplay();
+                saveSkins();
+                updateSkinsDisplay();
+            }
+        }
+
+        function activateSkin(skinId) {
+            const skin = skins.find(s => s.id === skinId);
+            if (!skin || !skin.owned) return;
+
+            skins.forEach(s => s.active = false);
+            skin.active = true;
+            currentMultiplier = skin.multiplier;
+            saveSkins();
+            updateSkinsDisplay();
+            updateCriteriaDisplay();
+        }
+
+        function updateCriteriaDisplay() {
+            document.getElementById('commonMultiplier').textContent = `x${currentMultiplier}`;
+            document.getElementById('rareMultiplier').textContent = `x${currentMultiplier}`;
+            document.getElementById('epicMultiplier').textContent = `x${currentMultiplier}`;
+            document.getElementById('legendaryMultiplier').textContent = `x${currentMultiplier}`;
+        }
+
         // Загрузка сохраненных данных
         function loadSavedData() {
             const savedScore = localStorage.getItem('score');
             const savedMoney = localStorage.getItem('money');
-            const savedChests = localStorage.getItem('totalChests');
-            const savedCommon = localStorage.getItem('commonCount');
-            const savedRare = localStorage.getItem('rareCount');
-            const savedEpic = localStorage.getItem('epicCount');
-            const savedLegendary = localStorage.getItem('legendaryCount');
-            
-            if (savedScore) {
-                score = parseInt(savedScore);
-                document.getElementById('score').textContent = score;
-            }
-            
-            if (savedMoney) {
-                money = parseInt(savedMoney);
-                document.getElementById('money').textContent = money;
-            }
+            const savedTotalChests = localStorage.getItem('totalChests');
+            const savedCommonCount = localStorage.getItem('commonCount');
+            const savedRareCount = localStorage.getItem('rareCount');
+            const savedEpicCount = localStorage.getItem('epicCount');
+            const savedLegendaryCount = localStorage.getItem('legendaryCount');
 
-            if (savedChests) {
-                totalChests = parseInt(savedChests);
-                document.getElementById('totalChests').textContent = totalChests;
-            }
+            if (savedScore) score = parseInt(savedScore);
+            if (savedMoney) money = parseInt(savedMoney);
+            if (savedTotalChests) totalChests = parseInt(savedTotalChests);
+            if (savedCommonCount) commonCount = parseInt(savedCommonCount);
+            if (savedRareCount) rareCount = parseInt(savedRareCount);
+            if (savedEpicCount) epicCount = parseInt(savedEpicCount);
+            if (savedLegendaryCount) legendaryCount = parseInt(savedLegendaryCount);
 
-            if (savedCommon) {
-                commonCount = parseInt(savedCommon);
-                document.getElementById('commonCount').textContent = commonCount;
-            }
-
-            if (savedRare) {
-                rareCount = parseInt(savedRare);
-                document.getElementById('rareCount').textContent = rareCount;
-            }
-
-            if (savedEpic) {
-                epicCount = parseInt(savedEpic);
-                document.getElementById('epicCount').textContent = epicCount;
-            }
-
-            if (savedLegendary) {
-                legendaryCount = parseInt(savedLegendary);
-                document.getElementById('legendaryCount').textContent = legendaryCount;
-            }
-
+            document.getElementById('score').textContent = score;
+            document.getElementById('totalChests').textContent = totalChests;
+            document.getElementById('commonCount').textContent = commonCount;
+            document.getElementById('rareCount').textContent = rareCount;
+            document.getElementById('epicCount').textContent = epicCount;
+            document.getElementById('legendaryCount').textContent = legendaryCount;
             updateMoneyDisplay();
-        }
-
-        // Сохранение данных
-        function saveData() {
-            localStorage.setItem('score', score.toString());
-            localStorage.setItem('money', money.toString());
-            localStorage.setItem('totalChests', totalChests.toString());
-            localStorage.setItem('commonCount', commonCount.toString());
-            localStorage.setItem('rareCount', rareCount.toString());
-            localStorage.setItem('epicCount', epicCount.toString());
-            localStorage.setItem('legendaryCount', legendaryCount.toString());
-        }
-
-        function generateNumber() {
-            const minInput = document.getElementById('minNumber');
-            const maxInput = document.getElementById('maxNumber');
-            const errorMessage = document.getElementById('errorMessage');
-            const display = document.getElementById('randomNumber');
-            
-            const min = parseInt(minInput.value);
-            const max = parseInt(maxInput.value);
-            
-            if (isNaN(min) || isNaN(max)) {
-                errorMessage.textContent = 'Пожалуйста, введите корректные числа';
-                return;
-            }
-            
-            if (min >= max) {
-                errorMessage.textContent = 'Минимальное число должно быть меньше максимального';
-                return;
-            }
-            
-            errorMessage.textContent = '';
-            const number = Math.floor(Math.random() * (max - min + 1)) + min;
-            
-            display.style.opacity = '0';
-            setTimeout(() => {
-                display.textContent = number;
-                display.style.opacity = '1';
-            }, 200);
+            loadSkins();
+            updateCriteriaDisplay();
         }
 
         function updateMoneyDisplay() {
@@ -854,7 +973,7 @@
                     bigCommonWords[Math.floor(Math.random() * bigCommonWords.length)] :
                     commonWords[Math.floor(Math.random() * commonWords.length)];
                 rarityClass = 'common';
-                points = type === 'big' ? 2 : 1;
+                points = Math.floor((type === 'big' ? 2 : 1) * currentMultiplier);
                 moneyReward = type === 'big' ? 8 : 5;
                 chestOpenSound.play();
             } else if (rarity < 0.6) {
@@ -862,7 +981,7 @@
                     bigRareWords[Math.floor(Math.random() * bigRareWords.length)] :
                     rareWords[Math.floor(Math.random() * rareWords.length)];
                 rarityClass = 'rare';
-                points = type === 'big' ? 5 : 3;
+                points = Math.floor((type === 'big' ? 5 : 3) * currentMultiplier);
                 moneyReward = type === 'big' ? 15 : 10;
                 rareSound.play();
             } else if (rarity < 0.8) {
@@ -870,7 +989,7 @@
                     bigEpicWords[Math.floor(Math.random() * bigEpicWords.length)] :
                     epicWords[Math.floor(Math.random() * epicWords.length)];
                 rarityClass = 'epic';
-                points = type === 'big' ? 8 : 5;
+                points = Math.floor((type === 'big' ? 8 : 5) * currentMultiplier);
                 moneyReward = type === 'big' ? 23 : 15;
                 epicSound.play();
             } else {
@@ -878,7 +997,7 @@
                     bigLegendaryWords[Math.floor(Math.random() * bigLegendaryWords.length)] :
                     legendaryWords[Math.floor(Math.random() * legendaryWords.length)];
                 rarityClass = 'legendary';
-                points = type === 'big' ? 15 : 10;
+                points = Math.floor((type === 'big' ? 15 : 10) * currentMultiplier);
                 moneyReward = type === 'big' ? 30 : 20;
                 legendarySound.play();
             }
@@ -922,15 +1041,67 @@
                 rareCount = 0;
                 epicCount = 0;
                 legendaryCount = 0;
-
-                document.getElementById('score').textContent = '0';
-                document.getElementById('money').textContent = '0';
-                document.getElementById('totalChests').textContent = '0';
                 
-                updateStats();
+                document.getElementById('score').textContent = score;
+                document.getElementById('totalChests').textContent = totalChests;
+                document.getElementById('commonCount').textContent = commonCount;
+                document.getElementById('rareCount').textContent = rareCount;
+                document.getElementById('epicCount').textContent = epicCount;
+                document.getElementById('legendaryCount').textContent = legendaryCount;
+                
+                // Сброс скинов
+                skins.forEach(skin => {
+                    skin.owned = skin.id === 'basic';
+                    skin.active = skin.id === 'basic';
+                });
+                currentMultiplier = 1;
+                saveSkins();
+                updateSkinsDisplay();
+                updateCriteriaDisplay();
+                
                 updateMoneyDisplay();
                 saveData();
             }
+        }
+
+        function generateNumber() {
+            const minInput = document.getElementById('minNumber');
+            const maxInput = document.getElementById('maxNumber');
+            const errorMessage = document.getElementById('errorMessage');
+            const display = document.getElementById('randomNumber');
+            
+            const min = parseInt(minInput.value);
+            const max = parseInt(maxInput.value);
+            
+            if (isNaN(min) || isNaN(max)) {
+                errorMessage.textContent = 'Пожалуйста, введите корректные числа';
+                return;
+            }
+            
+            if (min >= max) {
+                errorMessage.textContent = 'Минимальное число должно быть меньше максимального';
+                return;
+            }
+            
+            errorMessage.textContent = '';
+            const number = Math.floor(Math.random() * (max - min + 1)) + min;
+            
+            display.style.opacity = '0';
+            setTimeout(() => {
+                display.textContent = number;
+                display.style.opacity = '1';
+            }, 200);
+        }
+
+        // Сохранение данных
+        function saveData() {
+            localStorage.setItem('score', score.toString());
+            localStorage.setItem('money', money.toString());
+            localStorage.setItem('totalChests', totalChests.toString());
+            localStorage.setItem('commonCount', commonCount.toString());
+            localStorage.setItem('rareCount', rareCount.toString());
+            localStorage.setItem('epicCount', epicCount.toString());
+            localStorage.setItem('legendaryCount', legendaryCount.toString());
         }
 
         // Инициализация при загрузке страницы
