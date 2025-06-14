@@ -12,19 +12,6 @@
             padding: 20px;
             min-height: 100vh;
         }
-        .stars {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            font-size: 24px;
-            color: #FFD700;
-            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
-            animation: twinkle 1.5s infinite alternate;
-        }
-        @keyframes twinkle {
-            from { opacity: 0.5; }
-            to { opacity: 1; }
-        }
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -129,12 +116,18 @@
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
             text-align: center;
+        }
+        .chests-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 20px 0;
         }
         .chest {
             width: 150px;
             height: 150px;
-            margin: 0 auto;
             cursor: pointer;
             transition: transform 0.3s ease;
             position: relative;
@@ -146,6 +139,31 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+        }
+        .chest.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .chest.disabled:hover {
+            transform: none;
+        }
+        .chest-price {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 215, 0, 0.2);
+            padding: 5px 15px;
+            border-radius: 15px;
+            color: #8B4513;
+            font-weight: bold;
+            font-size: 0.9em;
+            white-space: nowrap;
         }
         .word-display {
             margin-top: 20px;
@@ -199,23 +217,6 @@
             color: #8B4513;
             font-weight: bold;
         }
-        .score-display {
-            font-size: 1.5em;
-            color: #8B4513;
-            text-align: center;
-            margin: 20px 0;
-            padding: 10px;
-            background-color: rgba(255, 215, 0, 0.1);
-            border-radius: 10px;
-        }
-        .score-animation {
-            animation: scorePop 0.5s ease;
-        }
-        @keyframes scorePop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
         .criteria-container {
             background-color: #fff;
             padding: 20px;
@@ -252,6 +253,55 @@
             background-color: rgba(255, 215, 0, 0.2);
             border-radius: 4px;
         }
+        .score-display {
+            font-size: 1.5em;
+            color: #8B4513;
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: rgba(255, 215, 0, 0.1);
+            border-radius: 10px;
+        }
+        .score-animation {
+            animation: scorePop 0.5s ease;
+        }
+        @keyframes scorePop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .money-display {
+            background-color: rgba(255, 215, 0, 0.2);
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: #8B4513;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin: 20px auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 200px;
+        }
+        .money-display span {
+            color: #FFD700;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+        }
+        .chest-counter {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: #8B4513;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin: 20px auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 200px;
+        }
+        .chest-counter span {
+            color: #FFD700;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+        }
         .reset-btn {
             background-color: #ff4444;
             color: white;
@@ -261,7 +311,8 @@
             border-radius: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 10px;
+            margin: 20px auto;
+            display: block;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .reset-btn:hover {
@@ -273,44 +324,15 @@
             transform: translateY(0);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        .stars-container {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
+        .money-animation {
+            animation: moneyPop 0.5s ease;
         }
-        * {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
+        @keyframes moneyPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }
-        .chest img {
-            -webkit-user-drag: none;
-            -khtml-user-drag: none;
-            -moz-user-drag: none;
-            -o-user-drag: none;
-            user-drag: none;
-        }
-        .chest-counter {
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 10px 20px;
-            border-radius: 20px;
-            color: #8B4513;
-            font-weight: bold;
-            font-size: 1.1em;
-            margin-top: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        .chest-counter span {
-            color: #FFD700;
-            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
-        }
-        
+
         /* Мобильные стили */
         @media screen and (max-width: 768px) {
             .container {
@@ -321,19 +343,6 @@
             
             .left-section, .right-section {
                 width: 100%;
-            }
-            
-            .stars-container {
-                position: relative;
-                top: 0;
-                left: 0;
-                width: 100%;
-                align-items: center;
-                margin-bottom: 20px;
-            }
-            
-            .stars {
-                font-size: 20px;
             }
             
             h1 {
@@ -373,7 +382,7 @@
                 height: 120px;
             }
             
-            .stats-grid, .criteria-grid {
+            .stats-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -449,13 +458,6 @@
     </style>
 </head>
 <body>
-    <div class="stars-container">
-        <div class="stars">★★★★★★★★★★</div>
-        <button class="reset-btn" onclick="resetStats()">Обнулить</button>
-        <div class="chest-counter">
-            Открыто сундуков: <span id="totalChests">0</span>
-        </div>
-    </div>
     <div class="container">
         <div class="left-section">
             <h1>Stellar Dreams</h1>
@@ -479,14 +481,28 @@
         
         <div class="right-section">
             <div class="chest-container">
-                <h2>Волшебный сундук</h2>
+                <h2>Волшебные сундуки</h2>
                 <div class="score-display" id="scoreDisplay">
                     Очки: <span id="score">0</span>
                 </div>
-                <div class="chest" onclick="openChest()">
-                    <img src="https://cdn-icons-png.flaticon.com/512/1785/1785210.png" alt="Сундук">
+                <div class="money-display" id="moneyDisplay">
+                    Деньги: <span id="money">0</span> 💰
+                </div>
+                <div class="chests-wrapper">
+                    <div class="chest" onclick="openChest('normal')">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1785/1785210.png" alt="Сундук">
+                        <div class="chest-price">Бесплатно</div>
+                    </div>
+                    <div class="chest" id="bigChest" onclick="openChest('big')">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1785/1785210.png" alt="Большой сундук">
+                        <div class="chest-price">1000 💰</div>
+                    </div>
                 </div>
                 <div class="word-display" id="wordDisplay"></div>
+                <div class="chest-counter">
+                    Открыто сундуков: <span id="totalChests">0</span>
+                </div>
+                <button class="reset-btn" onclick="resetStats()">Обнулить</button>
                 <div class="stats-container">
                     <div class="stats-title">Статистика</div>
                     <div class="stats-grid">
@@ -539,6 +555,24 @@
     <audio id="legendarySound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
 
     <script>
+        let score = 0;
+        let money = 0;
+        let totalChests = 0;
+        let commonCount = 0;
+        let rareCount = 0;
+        let epicCount = 0;
+        let legendaryCount = 0;
+
+        const commonWords = ['Яблоко', 'Стол', 'Книга', 'Дом', 'Кошка', 'Собака', 'Дерево', 'Цветок', 'Солнце', 'Луна'];
+        const rareWords = ['Радуга', 'Звёзды', 'Океан', 'Горы', 'Вулкан', 'Водопад', 'Полярное сияние', 'Метеорит', 'Кристалл', 'Алмаз'];
+        const epicWords = ['Дракон', 'Феникс', 'Единорог', 'Пегас', 'Кентавр', 'Грифон', 'Василиск', 'Химера', 'Кракен', 'Левиафан'];
+        const legendaryWords = ['Артефакт', 'Эликсир', 'Свиток', 'Амулет', 'Талисман', 'Кулон', 'Кольцо', 'Корона', 'Скипетр', 'Меч'];
+
+        const bigCommonWords = ['Метеорит', 'Комета', 'Галактика', 'Туманность', 'Квазар', 'Пульсар', 'Чёрная дыра', 'Нейтронная звезда', 'Сверхновая', 'Космос'];
+        const bigRareWords = ['Хроносфера', 'Телепорт', 'Портал', 'Временной поток', 'Пространственный разлом', 'Квантовый скачок', 'Астральный план', 'Эфирный мир', 'Магический кристалл', 'Древний артефакт'];
+        const bigEpicWords = ['Древний дракон', 'Космический феникс', 'Звёздный единорог', 'Небесный пегас', 'Космический кентавр', 'Галактический грифон', 'Временной василиск', 'Квантовая химера', 'Космический кракен', 'Древний левиафан'];
+        const bigLegendaryWords = ['Создатель миров', 'Хранитель времени', 'Повелитель пространства', 'Властелин галактик', 'Хранитель знаний', 'Страж вечности', 'Повелитель стихий', 'Хранитель судеб', 'Властелин магии', 'Создатель легенд'];
+
         function generateNumber() {
             const minInput = document.getElementById('minNumber');
             const maxInput = document.getElementById('maxNumber');
@@ -568,160 +602,135 @@
             }, 200);
         }
 
-        const words = {
-            common: ['Дерево', 'Камень', 'Трава', 'Вода', 'Воздух', 'Огонь', 'Земля', 'Песок'],
-            rare: ['Кристалл', 'Рубин', 'Сапфир', 'Изумруд', 'Аметист', 'Топаз'],
-            epic: ['Феникс', 'Дракон', 'Единорог', 'Пегас', 'Кентавр', 'Грифон'],
-            legendary: ['Артефакт', 'Легенда', 'Миф', 'Сокровище', 'Мудрость', 'Вечность']
-        };
+        function updateMoneyDisplay() {
+            document.getElementById('money').textContent = money;
+            const bigChest = document.getElementById('bigChest');
+            if (money >= 1000) {
+                bigChest.classList.remove('disabled');
+            } else {
+                bigChest.classList.add('disabled');
+            }
+        }
 
-        const points = {
-            common: 1,
-            rare: 3,
-            epic: 5,
-            legendary: 10
-        };
+        function updateStats(rarity) {
+            if (rarity === 'common') commonCount++;
+            else if (rarity === 'rare') rareCount++;
+            else if (rarity === 'epic') epicCount++;
+            else if (rarity === 'legendary') legendaryCount++;
 
-        let stats = {
-            common: 0,
-            rare: 0,
-            epic: 0,
-            legendary: 0
-        };
+            document.getElementById('commonCount').textContent = commonCount;
+            document.getElementById('rareCount').textContent = rareCount;
+            document.getElementById('epicCount').textContent = epicCount;
+            document.getElementById('legendaryCount').textContent = legendaryCount;
+        }
 
-        let totalScore = 0;
-        let totalChests = 0;
+        function openChest(type) {
+            if (type === 'big' && money < 1000) {
+                return;
+            }
 
-        // Загрузка сохраненных данных
-        function loadSavedData() {
-            const savedStats = localStorage.getItem('chestStats');
-            const savedScore = localStorage.getItem('chestScore');
-            const savedChests = localStorage.getItem('totalChests');
+            if (type === 'big') {
+                money -= 1000;
+            }
+
+            const chest = document.querySelector(`.chest${type === 'big' ? '#bigChest' : ''}`);
+            chest.style.transform = 'scale(0.9)';
+            setTimeout(() => chest.style.transform = 'scale(1)', 200);
+
+            const rarity = Math.random();
+            let word, rarityClass, points, moneyReward;
+            const chestOpenSound = document.getElementById('chestOpen');
+            const rareSound = document.getElementById('rareSound');
+            const epicSound = document.getElementById('epicSound');
+            const legendarySound = document.getElementById('legendarySound');
+
+            if (rarity < 0.3) {
+                word = type === 'big' ? 
+                    bigCommonWords[Math.floor(Math.random() * bigCommonWords.length)] :
+                    commonWords[Math.floor(Math.random() * commonWords.length)];
+                rarityClass = 'common';
+                points = type === 'big' ? 2 : 1;
+                moneyReward = type === 'big' ? 8 : 5;
+                chestOpenSound.play();
+            } else if (rarity < 0.6) {
+                word = type === 'big' ? 
+                    bigRareWords[Math.floor(Math.random() * bigRareWords.length)] :
+                    rareWords[Math.floor(Math.random() * rareWords.length)];
+                rarityClass = 'rare';
+                points = type === 'big' ? 5 : 3;
+                moneyReward = type === 'big' ? 15 : 10;
+                rareSound.play();
+            } else if (rarity < 0.8) {
+                word = type === 'big' ? 
+                    bigEpicWords[Math.floor(Math.random() * bigEpicWords.length)] :
+                    epicWords[Math.floor(Math.random() * epicWords.length)];
+                rarityClass = 'epic';
+                points = type === 'big' ? 8 : 5;
+                moneyReward = type === 'big' ? 23 : 15;
+                epicSound.play();
+            } else {
+                word = type === 'big' ? 
+                    bigLegendaryWords[Math.floor(Math.random() * bigLegendaryWords.length)] :
+                    legendaryWords[Math.floor(Math.random() * legendaryWords.length)];
+                rarityClass = 'legendary';
+                points = type === 'big' ? 15 : 10;
+                moneyReward = type === 'big' ? 30 : 20;
+                legendarySound.play();
+            }
+
+            const wordDisplay = document.getElementById('wordDisplay');
+            const wordElement = document.createElement('div');
+            wordElement.className = `word ${rarityClass}`;
+            wordElement.textContent = word;
+            wordDisplay.innerHTML = '';
+            wordDisplay.appendChild(wordElement);
+
+            setTimeout(() => wordElement.classList.add('show'), 100);
+
+            score += points;
+            money += moneyReward;
+            totalChests++;
+
+            document.getElementById('score').textContent = score;
+            document.getElementById('money').textContent = money;
+            document.getElementById('totalChests').textContent = totalChests;
+
+            updateStats(rarityClass);
+            updateMoneyDisplay();
             
-            if (savedStats) {
-                stats = JSON.parse(savedStats);
-                updateStatsDisplay();
+            if (moneyReward > 0) {
+                const moneyElement = document.createElement('div');
+                moneyElement.className = `word ${rarityClass}`;
+                moneyElement.textContent = `+${moneyReward} 💰`;
+                wordDisplay.appendChild(moneyElement);
+                setTimeout(() => moneyElement.classList.add('show'), 100);
             }
-            
-            if (savedScore) {
-                totalScore = parseInt(savedScore);
-                document.getElementById('score').textContent = totalScore;
-            }
-
-            if (savedChests) {
-                totalChests = parseInt(savedChests);
-                document.getElementById('totalChests').textContent = totalChests;
-            }
-        }
-
-        // Сохранение данных
-        function saveData() {
-            localStorage.setItem('chestStats', JSON.stringify(stats));
-            localStorage.setItem('chestScore', totalScore.toString());
-            localStorage.setItem('totalChests', totalChests.toString());
-        }
-
-        // Обновление отображения статистики
-        function updateStatsDisplay() {
-            document.getElementById('commonCount').textContent = stats.common;
-            document.getElementById('rareCount').textContent = stats.rare;
-            document.getElementById('epicCount').textContent = stats.epic;
-            document.getElementById('legendaryCount').textContent = stats.legendary;
-        }
-
-        function updateStats(category) {
-            stats[category]++;
-            document.getElementById(`${category}Count`).textContent = stats[category];
-            saveData();
-        }
-
-        function updateScore(points) {
-            totalScore += points;
-            const scoreDisplay = document.getElementById('score');
-            scoreDisplay.textContent = totalScore;
-            scoreDisplay.parentElement.classList.add('score-animation');
-            setTimeout(() => {
-                scoreDisplay.parentElement.classList.remove('score-animation');
-            }, 500);
-            saveData();
         }
 
         function resetStats() {
-            if (confirm('Вы уверены, что хотите обнулить все результаты?')) {
-                stats = {
-                    common: 0,
-                    rare: 0,
-                    epic: 0,
-                    legendary: 0
-                };
-                totalScore = 0;
+            if (confirm('Вы уверены, что хотите обнулить всю статистику? Это действие нельзя отменить.')) {
+                score = 0;
+                money = 0;
                 totalChests = 0;
-                updateStatsDisplay();
+                commonCount = 0;
+                rareCount = 0;
+                epicCount = 0;
+                legendaryCount = 0;
+
                 document.getElementById('score').textContent = '0';
+                document.getElementById('money').textContent = '0';
                 document.getElementById('totalChests').textContent = '0';
-                saveData();
+                
+                updateStats();
+                updateMoneyDisplay();
             }
         }
 
-        function openChest() {
-            const chest = document.querySelector('.chest');
-            const wordDisplay = document.getElementById('wordDisplay');
-            const chestOpenSound = document.getElementById('chestOpen');
-            
-            chest.style.transform = 'scale(0.9)';
-            setTimeout(() => chest.style.transform = 'scale(1.1)', 200);
-            
-            chestOpenSound.currentTime = 0;
-            chestOpenSound.play();
-
-            // Увеличиваем счётчик открытий
-            totalChests++;
-            document.getElementById('totalChests').textContent = totalChests;
-            saveData();
-
-            const rarity = Math.random();
-            let wordCategory, wordClass, sound;
-            
-            if (rarity < 0.6) {
-                wordCategory = 'common';
-                wordClass = 'common';
-                sound = null;
-            } else if (rarity < 0.85) {
-                wordCategory = 'rare';
-                wordClass = 'rare';
-                sound = document.getElementById('rareSound');
-            } else if (rarity < 0.95) {
-                wordCategory = 'epic';
-                wordClass = 'epic';
-                sound = document.getElementById('epicSound');
-            } else {
-                wordCategory = 'legendary';
-                wordClass = 'legendary';
-                sound = document.getElementById('legendarySound');
-            }
-
-            const word = words[wordCategory][Math.floor(Math.random() * words[wordCategory].length)];
-            
-            const wordElement = document.createElement('div');
-            wordElement.className = `word ${wordClass}`;
-            wordElement.textContent = word;
-            
-            wordDisplay.innerHTML = '';
-            wordDisplay.appendChild(wordElement);
-            
-            setTimeout(() => wordElement.classList.add('show'), 100);
-            
-            if (sound) {
-                sound.currentTime = 0;
-                sound.play();
-            }
-
-            updateStats(wordCategory);
-            updateScore(points[wordCategory]);
-        }
-
-        // Загружаем сохраненные данные при загрузке страницы
-        loadSavedData();
+        // Инициализация при загрузке страницы
+        window.onload = function() {
+            updateStats();
+            updateMoneyDisplay();
+        };
 
         // Запрет контекстного меню
         document.addEventListener('contextmenu', function(e) {
@@ -733,7 +742,7 @@
             e.preventDefault();
         });
 
-        // Запрет перетаскивания элементов
+        // Запрет перетаскивания
         document.addEventListener('dragstart', function(e) {
             e.preventDefault();
         });
