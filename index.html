@@ -11,6 +11,7 @@
             margin: 0;
             padding: 20px;
             min-height: 100vh;
+            position: relative;
         }
         .container {
             max-width: 1200px;
@@ -455,9 +456,154 @@
                 transform: scale(0.95);
             }
         }
+
+        .dev-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(139, 69, 19, 0.1);
+            border: 2px solid #8B4513;
+            color: #8B4513;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+            opacity: 0.3;
+            transition: opacity 0.3s ease;
+        }
+        .dev-button:hover {
+            opacity: 0.7;
+        }
+        .dev-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+        .dev-modal input {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 2px solid #8B4513;
+            border-radius: 5px;
+        }
+        .dev-modal .buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 15px;
+        }
+        .dev-modal button {
+            background-color: #8B4513;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .dev-modal button:hover {
+            background-color: #A0522D;
+        }
+        .dev-modal button.close {
+            background-color: #ff4444;
+        }
+        .dev-modal button.close:hover {
+            background-color: #ff0000;
+        }
+        .dev-controls {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+        }
+        .dev-controls input {
+            width: 80px;
+            padding: 5px;
+            margin: 5px;
+            border: 1px solid #8B4513;
+            border-radius: 3px;
+        }
+        .dev-controls label {
+            color: #8B4513;
+            font-size: 0.9em;
+            margin-right: 5px;
+        }
+        .dev-controls button {
+            background-color: #8B4513;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        .dev-controls button:hover {
+            background-color: #A0522D;
+        }
     </style>
 </head>
 <body>
+    <div class="dev-button" onclick="showDevModal()">⚙️</div>
+    
+    <div class="dev-modal" id="devModal">
+        <h3>Режим разработчика</h3>
+        <input type="password" id="devCode" placeholder="Введите код доступа">
+        <div class="buttons">
+            <button class="close" onclick="closeDevModal()">Закрыть</button>
+            <button onclick="checkDevCode()">Войти</button>
+        </div>
+    </div>
+
+    <div class="dev-controls" id="devControls">
+        <h4>Панель управления</h4>
+        <div>
+            <label>Очки:</label>
+            <input type="number" id="devScore" value="0">
+            <button onclick="updateDevValue('score')">Применить</button>
+        </div>
+        <div>
+            <label>Деньги:</label>
+            <input type="number" id="devMoney" value="0">
+            <button onclick="updateDevValue('money')">Применить</button>
+        </div>
+        <div>
+            <label>Сундуки:</label>
+            <input type="number" id="devChests" value="0">
+            <button onclick="updateDevValue('chests')">Применить</button>
+        </div>
+        <div>
+            <label>Обычные:</label>
+            <input type="number" id="devCommon" value="0">
+            <button onclick="updateDevValue('common')">Применить</button>
+        </div>
+        <div>
+            <label>Редкие:</label>
+            <input type="number" id="devRare" value="0">
+            <button onclick="updateDevValue('rare')">Применить</button>
+        </div>
+        <div>
+            <label>Эпические:</label>
+            <input type="number" id="devEpic" value="0">
+            <button onclick="updateDevValue('epic')">Применить</button>
+        </div>
+        <div>
+            <label>Легендарные:</label>
+            <input type="number" id="devLegendary" value="0">
+            <button onclick="updateDevValue('legendary')">Применить</button>
+        </div>
+    </div>
+
     <div class="container">
         <div class="left-section">
             <h1>Stellar Dreams</h1>
@@ -572,6 +718,65 @@
         const bigRareWords = ['Хроносфера', 'Телепорт', 'Портал', 'Временной поток', 'Пространственный разлом', 'Квантовый скачок', 'Астральный план', 'Эфирный мир', 'Магический кристалл', 'Древний артефакт'];
         const bigEpicWords = ['Древний дракон', 'Космический феникс', 'Звёздный единорог', 'Небесный пегас', 'Космический кентавр', 'Галактический грифон', 'Временной василиск', 'Квантовая химера', 'Космический кракен', 'Древний левиафан'];
         const bigLegendaryWords = ['Создатель миров', 'Хранитель времени', 'Повелитель пространства', 'Властелин галактик', 'Хранитель знаний', 'Страж вечности', 'Повелитель стихий', 'Хранитель судеб', 'Властелин магии', 'Создатель легенд'];
+
+        // Загрузка сохраненных данных
+        function loadSavedData() {
+            const savedScore = localStorage.getItem('score');
+            const savedMoney = localStorage.getItem('money');
+            const savedChests = localStorage.getItem('totalChests');
+            const savedCommon = localStorage.getItem('commonCount');
+            const savedRare = localStorage.getItem('rareCount');
+            const savedEpic = localStorage.getItem('epicCount');
+            const savedLegendary = localStorage.getItem('legendaryCount');
+            
+            if (savedScore) {
+                score = parseInt(savedScore);
+                document.getElementById('score').textContent = score;
+            }
+            
+            if (savedMoney) {
+                money = parseInt(savedMoney);
+                document.getElementById('money').textContent = money;
+            }
+
+            if (savedChests) {
+                totalChests = parseInt(savedChests);
+                document.getElementById('totalChests').textContent = totalChests;
+            }
+
+            if (savedCommon) {
+                commonCount = parseInt(savedCommon);
+                document.getElementById('commonCount').textContent = commonCount;
+            }
+
+            if (savedRare) {
+                rareCount = parseInt(savedRare);
+                document.getElementById('rareCount').textContent = rareCount;
+            }
+
+            if (savedEpic) {
+                epicCount = parseInt(savedEpic);
+                document.getElementById('epicCount').textContent = epicCount;
+            }
+
+            if (savedLegendary) {
+                legendaryCount = parseInt(savedLegendary);
+                document.getElementById('legendaryCount').textContent = legendaryCount;
+            }
+
+            updateMoneyDisplay();
+        }
+
+        // Сохранение данных
+        function saveData() {
+            localStorage.setItem('score', score.toString());
+            localStorage.setItem('money', money.toString());
+            localStorage.setItem('totalChests', totalChests.toString());
+            localStorage.setItem('commonCount', commonCount.toString());
+            localStorage.setItem('rareCount', rareCount.toString());
+            localStorage.setItem('epicCount', epicCount.toString());
+            localStorage.setItem('legendaryCount', legendaryCount.toString());
+        }
 
         function generateNumber() {
             const minInput = document.getElementById('minNumber');
@@ -697,6 +902,7 @@
 
             updateStats(rarityClass);
             updateMoneyDisplay();
+            saveData();
             
             if (moneyReward > 0) {
                 const moneyElement = document.createElement('div');
@@ -723,11 +929,13 @@
                 
                 updateStats();
                 updateMoneyDisplay();
+                saveData();
             }
         }
 
         // Инициализация при загрузке страницы
         window.onload = function() {
+            loadSavedData();
             updateStats();
             updateMoneyDisplay();
         };
@@ -739,13 +947,86 @@
 
         // Запрет выделения текста
         document.addEventListener('selectstart', function(e) {
-            e.preventDefault();
+            if (!window.devMode) {
+                e.preventDefault();
+            }
         });
 
         // Запрет перетаскивания
         document.addEventListener('dragstart', function(e) {
             e.preventDefault();
         });
+
+        // Функции режима разработчика
+        function showDevModal() {
+            document.getElementById('devModal').style.display = 'block';
+        }
+
+        function closeDevModal() {
+            document.getElementById('devModal').style.display = 'none';
+            document.getElementById('devCode').value = '';
+        }
+
+        function checkDevCode() {
+            const code = document.getElementById('devCode').value;
+            if (code === 'Dr@gonFly_∞2025') {
+                window.devMode = true;
+                document.getElementById('devModal').style.display = 'none';
+                document.getElementById('devControls').style.display = 'block';
+                document.querySelector('.dev-button').style.display = 'none';
+                updateDevInputs();
+            } else {
+                alert('Неверный код доступа');
+            }
+        }
+
+        function updateDevInputs() {
+            document.getElementById('devScore').value = score;
+            document.getElementById('devMoney').value = money;
+            document.getElementById('devChests').value = totalChests;
+            document.getElementById('devCommon').value = commonCount;
+            document.getElementById('devRare').value = rareCount;
+            document.getElementById('devEpic').value = epicCount;
+            document.getElementById('devLegendary').value = legendaryCount;
+        }
+
+        function updateDevValue(type) {
+            const value = parseInt(document.getElementById(`dev${type.charAt(0).toUpperCase() + type.slice(1)}`).value);
+            if (isNaN(value)) return;
+
+            switch(type) {
+                case 'score':
+                    score = value;
+                    document.getElementById('score').textContent = value;
+                    break;
+                case 'money':
+                    money = value;
+                    document.getElementById('money').textContent = value;
+                    updateMoneyDisplay();
+                    break;
+                case 'chests':
+                    totalChests = value;
+                    document.getElementById('totalChests').textContent = value;
+                    break;
+                case 'common':
+                    commonCount = value;
+                    document.getElementById('commonCount').textContent = value;
+                    break;
+                case 'rare':
+                    rareCount = value;
+                    document.getElementById('rareCount').textContent = value;
+                    break;
+                case 'epic':
+                    epicCount = value;
+                    document.getElementById('epicCount').textContent = value;
+                    break;
+                case 'legendary':
+                    legendaryCount = value;
+                    document.getElementById('legendaryCount').textContent = value;
+                    break;
+            }
+            saveData();
+        }
     </script>
 </body>
 </html> 
